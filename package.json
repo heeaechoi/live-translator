@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "cert": "bash scripts/make-cert.sh",
-    "test": "node --test"
+    "test": "node --test",
+    "quality": "node scripts/quality-test.js"
   },
   "repository": {
     "type": "git",
