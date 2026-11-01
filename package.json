@@ -1,0 +1,27 @@
+{
+  "name": "live-translator",
+  "version": "1.0.0",
+  "description": "iPad 음성을 영어→한국어로 실시간 번역하는 웹앱 (Claude)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "cert": "bash scripts/make-cert.sh",
+    "test": "node --test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heeaechoi/live-translator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/heeaechoi/live-translator/issues"
+  },
+  "homepage": "https://github.com/heeaechoi/live-translator#readme",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0"
+  },
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  }
+}

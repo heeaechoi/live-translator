@@ -1,0 +1,127 @@
+:root {
+  --bg: #0f1115;
+  --panel: #171a21;
+  --text: #f3f4f6;
+  --muted: #9aa3b2;
+  --accent: #4f8cff;
+  --live: #22c55e;
+  --warn: #f59e0b;
+  --err: #ef4444;
+  --line: #262b36;
+  --ko-size: 32px;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f7f7f9;
+    --panel: #ffffff;
+    --text: #111318;
+    --muted: #5d6573;
+    --line: #e3e6ec;
+    color-scheme: light;
+  }
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif;
+  display: flex;
+  flex-direction: column;
+  -webkit-text-size-adjust: 100%;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.title { display: flex; align-items: center; gap: 8px; font-weight: 600; min-width: 0; }
+#statusText { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); flex: none; }
+.dot.on { background: var(--live); box-shadow: 0 0 0 0 rgba(34,197,94,.6); animation: pulse 1.6s infinite; }
+.dot.warn { background: var(--warn); }
+.dot.err { background: var(--err); }
+@keyframes pulse { 70% { box-shadow: 0 0 0 10px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+
+.actions { display: flex; gap: 8px; flex: none; }
+button {
+  font: inherit;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  padding: 10px 16px;
+  color: var(--text);
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+button.primary.stop { background: var(--err); border-color: var(--err); }
+button.ghost { color: var(--muted); }
+
+main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 16px 8px;
+  -webkit-overflow-scrolling: touch;
+}
+.empty { max-width: 640px; margin: 8vh auto; color: var(--muted); line-height: 1.7; }
+.empty h1 { color: var(--text); font-size: 24px; }
+
+.seg { padding: 10px 0 14px; border-bottom: 1px solid var(--line); }
+.seg .ko { font-size: var(--ko-size); line-height: 1.45; font-weight: 600; word-break: keep-all; overflow-wrap: anywhere; }
+.seg .ko.loading { color: var(--muted); }
+.seg .ko.loading:empty::after { content: "번역 중…"; font-weight: 400; font-size: .6em; }
+.seg .ko.error { color: var(--err); font-size: .6em; font-weight: 400; }
+.seg .en { margin-top: 4px; color: var(--muted); font-size: calc(var(--ko-size) * .55); line-height: 1.4; }
+body.hide-en .seg .en { display: none; }
+
+.live {
+  padding: 10px 16px calc(12px + env(safe-area-inset-bottom));
+  background: var(--panel);
+  border-top: 1px solid var(--line);
+  min-height: 52px;
+}
+.pending { color: var(--muted); font-size: 17px; line-height: 1.4; max-height: 3em; overflow: hidden; }
+.pending:empty::before { content: "듣고 있는 영어 문장이 여기에 표시됩니다"; opacity: .5; }
+
+dialog {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--panel);
+  color: var(--text);
+  width: min(520px, calc(100vw - 32px));
+  padding: 20px;
+}
+dialog::backdrop { background: rgba(0,0,0,.5); }
+dialog h2 { margin-top: 0; }
+dialog label { display: block; margin: 14px 0; color: var(--muted); }
+dialog label.row { display: flex; align-items: center; gap: 8px; color: var(--text); }
+dialog input[type="range"], dialog textarea, dialog input[type="password"] { width: 100%; margin-top: 6px; }
+dialog textarea, dialog input[type="password"] {
+  font: inherit; font-size: 16px; color: var(--text); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px;
+}
+.hint { color: var(--muted); font-size: 13px; }
+.dialog-actions { display: flex; justify-content: space-between; gap: 8px; margin-top: 16px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(80px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+  background: #000c; color: #fff; padding: 10px 16px; border-radius: 10px; max-width: calc(100vw - 32px);
+  font-size: 15px; z-index: 10;
+}
+
+@media (max-width: 560px) {
+  .bar { flex-wrap: wrap; }
+  button { padding: 8px 12px; }
+}

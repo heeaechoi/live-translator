@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="실시간 번역" />
+  <meta name="theme-color" content="#0f1115" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icon.svg" />
+  <link rel="stylesheet" href="style.css" />
+  <title>실시간 영→한 번역</title>
+</head>
+<body>
+  <header class="bar">
+    <div class="title">
+      <span class="dot" id="statusDot"></span>
+      <span id="statusText">대기 중</span>
+    </div>
+    <div class="actions">
+      <button id="clearBtn" class="ghost" title="기록 지우기">지우기</button>
+      <button id="settingsBtn" class="ghost" title="설정">설정</button>
+      <button id="startBtn" class="primary">▶︎ 시작</button>
+    </div>
+  </header>
+
+  <main id="transcript" aria-live="polite">
+    <div class="empty" id="emptyState">
+      <h1>🎧 영어 음성을 한국어로 실시간 번역</h1>
+      <ol>
+        <li><b>시작</b>을 누르고 마이크 권한을 허용하세요.</li>
+        <li>아이패드에서 영상/강의를 소리 내어 재생하세요. (Split View로 옆에 띄우면 편해요)</li>
+        <li>문장이 끝날 때마다 한국어 자막이 바로 나타나요.</li>
+      </ol>
+    </div>
+  </main>
+
+  <footer class="live">
+    <div id="pending" class="pending"></div>
+  </footer>
+
+  <dialog id="settings">
+    <form method="dialog">
+      <h2>설정</h2>
+      <label>글자 크기
+        <input type="range" id="fontSize" min="18" max="56" step="2" />
+      </label>
+      <label class="row"><input type="checkbox" id="showEnglish" /> 영어 원문 함께 보기</label>
+      <label class="row"><input type="checkbox" id="autoScroll" /> 자동 스크롤</label>
+      <label>문장 끊는 침묵 시간 <span id="silenceVal"></span>
+        <input type="range" id="silenceMs" min="500" max="2000" step="100" />
+      </label>
+      <label>주제 / 용어집 (선택 — 정확도가 올라가요)
+        <textarea id="notes" rows="4" placeholder="예) 머신러닝 강의. transformer=트랜스포머, loss=손실, Andrew Ng=앤드루 응"></textarea>
+      </label>
+      <label id="pwRow" hidden>접속 비밀번호
+        <input type="password" id="password" autocomplete="current-password" />
+      </label>
+      <p class="hint" id="modelInfo"></p>
+      <div class="dialog-actions">
+        <button id="exportBtn" type="button" class="ghost">기록 저장(.txt)</button>
+        <button value="close" class="primary">닫기</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
