@@ -8,6 +8,11 @@
 
 const SENTENCE_END = /[.?!…]["')\]]*$/;
 const CLAUSE_END = /[,;:]["')\]]*$/;
+// A long unpunctuated run is split *before* one of these words.
+const BREAK_BEFORE = new Set([
+  "and", "but", "so", "because", "cause", "which", "who", "when", "while", "if", "then",
+  "although", "though", "since", "or", "until", "unless", "whereas", "where", "after", "before",
+]);
 
 export function splitWords(text) {
   return text.trim().split(/\s+/).filter(Boolean);
@@ -27,8 +32,8 @@ export class Segmenter {
     onCommit,
     onPending = () => {},
     silenceMs = 900,
-    softMaxWords = 18,
-    hardMaxWords = 30,
+    softMaxWords = 12,
+    hardMaxWords = 20,
     holdBackWords = 2,
     setTimer = (fn, ms) => setTimeout(fn, ms),
     clearTimer = (id) => clearTimeout(id),
@@ -90,13 +95,18 @@ export class Segmenter {
     const stableEnd = words.length - this.holdBackWords;
     let sentenceCut = -1;
     let clauseCut = -1;
+    let breakCut = -1;
     for (let k = done; k < stableEnd; k++) {
       if (SENTENCE_END.test(words[k])) sentenceCut = k + 1;
       else if (CLAUSE_END.test(words[k])) clauseCut = k + 1;
+      else if (k - done >= 5 && BREAK_BEFORE.has(words[k].toLowerCase())) breakCut = k;
     }
     if (sentenceCut > done) return sentenceCut;
     const pending = words.length - done;
-    if (pending >= this.softMaxWords && clauseCut - done >= 4) return clauseCut;
+    if (pending >= this.softMaxWords) {
+      if (clauseCut - done >= 4) return clauseCut;
+      if (breakCut > done) return breakCut;
+    }
     if (pending >= this.hardMaxWords) return Math.max(done, stableEnd);
     return done;
   }

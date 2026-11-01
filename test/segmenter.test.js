@@ -59,3 +59,9 @@ test("handles multiple result indexes", () => {
   seg.update([{ text: "First part", isFinal: true }, { text: "second part", isFinal: true }]);
   assert.deepEqual(commits, ["First part", "second part"]);
 });
+
+test("unpunctuated speech is split before a conjunction, not mid-phrase", () => {
+  const { seg, commits } = make();
+  seg.update([{ text: "so yeah I was thinking we could maybe push the launch to next Friday because the design team still", isFinal: false }]);
+  assert.equal(commits[0], "so yeah I was thinking we could maybe push the launch to next Friday");
+});

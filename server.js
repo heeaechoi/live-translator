@@ -75,6 +75,7 @@ function serveStatic(req, res) {
 }
 
 function errorMessage(err) {
+  if (/authentication method/i.test(err?.message ?? "")) return "서버에 API 키가 없어요. .env에 ANTHROPIC_API_KEY를 넣고 서버를 다시 시작하세요.";
   if (err instanceof Anthropic.AuthenticationError) return "API 키가 올바르지 않아요. .env의 ANTHROPIC_API_KEY를 확인하세요.";
   if (err instanceof Anthropic.RateLimitError) return "요청이 너무 많아요. 잠시 후 다시 시도됩니다.";
   if (err instanceof Anthropic.NotFoundError) return "모델을 찾을 수 없어요. TRANSLATOR_MODEL 값을 확인하세요.";
